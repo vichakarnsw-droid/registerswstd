@@ -26,7 +26,6 @@
         .animate-fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* สไตล์เพิ่มเติมสำหรับลำดับแผนการเรียน */
         .plan-card {
             transition: all 0.3s ease;
             border-left-width: 4px;
@@ -45,6 +44,7 @@
         <p class="text-gray-500 text-sm">ห้ามปิดหน้าจอนี้จนกว่าจะเสร็จสิ้น</p>
     </div>
 
+    <!-- Alert Box สำหรับแจ้งเตือนข้อผิดพลาดหรือเลขซ้ำ -->
     <div id="customAlert" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg rounded" role="alert">
         <p class="font-bold">แจ้งเตือน</p>
         <p id="alertMessage"></p>
@@ -193,9 +193,7 @@
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                         ลำดับแผนการเรียนที่เลือก
                     </p>
-                    <div id="sumPlans" class="grid grid-cols-1 gap-3">
-                        <!-- แผนการเรียนจะถูกเติมที่นี่ด้วย JS -->
-                    </div>
+                    <div id="sumPlans" class="grid grid-cols-1 gap-3"></div>
                 </div>
             </div>
 
@@ -235,6 +233,7 @@
             const idCardInput = document.getElementById('id_card');
             idCardInput.oninput = function() { 
                 if (this.value.length > 13) this.value = this.value.slice(0, 13);
+                this.value = this.value.replace(/[^0-9Gg]/g, ''); // อนุญาตแค่ตัวเลขและตัว G (เผื่อเด็กไม่มีสัญชาติ)
             };
         }
 
@@ -299,7 +298,7 @@
             document.getElementById('alertMessage').innerText = msg;
             box.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => { box.style.display = 'none'; }, 6000);
+            setTimeout(() => { box.style.display = 'none'; }, 8000);
         }
 
         document.getElementById('admissionForm').onsubmit = async (e) => {
@@ -320,7 +319,6 @@
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             const formData = new FormData(form);
-            // เก็บข้อมูลตัวที่ disabled (ที่ระบบเลือกให้อัตโนมัติว่าเป็น "ไม่เลือก")
             document.querySelectorAll('.plan-selector:disabled').forEach(s => formData.append(s.name, s.value));
             
             const data = Object.fromEntries(formData.entries());
@@ -332,11 +330,11 @@
                     body: JSON.stringify(data)
                 }).then(res => res.json());
 
+                // ตรวจสอบ Status จาก Apps Script
                 if (response.status === "success") {
                     document.getElementById('finalExamId').innerText = response.examId;
                     document.getElementById('regTimestamp').innerText = new Date().toLocaleString('th-TH');
                     
-                    // อัปเดตข้อมูลทั่วไป
                     document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
                     document.getElementById('sumIdCard').innerText = data.id_card;
                     document.getElementById('sumProvince').innerText = data.province;
@@ -344,12 +342,10 @@
                     document.getElementById('sumOldSchool').innerText = data.old_school;
                     document.getElementById('sumPhone').innerText = data.phone;
 
-                    // แสดงรายการแผนการเรียนแบบสวยงาม
                     let plansHtml = '';
                     for(let i=1; i<=5; i++) {
                         const pVal = data[`plan_${i}`] || NO_SELECTION;
                         const isNone = pVal === NO_SELECTION;
-                        
                         plansHtml += `
                             <div class="plan-card ${isNone ? 'plan-card-none' : 'plan-card-selected'} p-3 rounded-md flex justify-between items-center shadow-sm border border-gray-200">
                                 <div class="flex items-center gap-3">
@@ -365,7 +361,11 @@
                     form.classList.add('hidden');
                     document.getElementById('successPage').classList.remove('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else if (response.status === "duplicate") {
+                    // กรณีเลขบัตรซ้ำ
+                    showAlert(response.message);
                 } else {
+                    // กรณี Error อื่นๆ
                     throw new Error(response.message);
                 }
 
