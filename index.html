@@ -130,8 +130,8 @@
                         <input type="text" name="old_school" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์ติดต่อ</label>
-                        <input type="tel" name="phone" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="0XXXXXXXXX">
+                        <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์ติดต่อ (ต้องครบ 10 หลัก)</label>
+                        <input type="text" id="phone" name="phone" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="0XXXXXXXXX">
                     </div>
                 </div>
             </section>
@@ -221,6 +221,14 @@
         const provinceOther = document.getElementById('provinceOther');
         const districtInputWrapper = document.getElementById('districtInputWrapper');
         const planContainer = document.getElementById('planSelectContainer');
+        const phoneInput = document.getElementById('phone');
+
+        // Numeric only for ID Card and Phone
+        [document.getElementById('id_card'), phoneInput].forEach(el => {
+            el.addEventListener('keypress', function(e) {
+                if (!/[0-9]/.test(e.key)) e.preventDefault();
+            });
+        });
 
         // Address logic
         provinceSelect.addEventListener('change', function() {
@@ -330,6 +338,16 @@
                 return;
             }
 
+            // เบอร์โทรศัพท์ต้องครบ 10 หลัก
+            const phoneVal = phoneInput.value;
+            if (phoneVal.length !== 10) {
+                showAlert("เบอร์โทรศัพท์ต้องมีครบ 10 หลัก เท่านั้น");
+                phoneInput.classList.add('border-red-500');
+                return;
+            } else {
+                phoneInput.classList.remove('border-red-500');
+            }
+
             const plan1 = document.getElementById('plan_select_1').value;
             if (!plan1 || plan1 === NO_SELECTION) {
                 showAlert("กรุณาเลือกแผนการเรียนในอันดับที่ 1");
@@ -371,7 +389,7 @@
                 document.getElementById('finalExamId').innerText = nextId;
                 document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
                 document.getElementById('sumIdCard').innerText = data.id_card;
-                document.getElementById('sumPhone').innerText = data.phone;
+                document.getElementById('sumPhone').innerText = data.phone; // เก็บเลข 0 ตัวหน้าไว้เพราะเป็น string
                 document.getElementById('sumOldSchool').innerText = data.old_school;
 
                 let plansHtml = "";
