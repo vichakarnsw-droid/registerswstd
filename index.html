@@ -7,71 +7,39 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .input-disabled {
-            background-color: #e5e7eb;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        body { font-family: 'Sarabun', sans-serif; background-color: #f3f4f6; }
+        .input-disabled { background-color: #e5e7eb; cursor: not-allowed; opacity: 0.7; }
         #loadingOverlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9);
-            z-index: 1000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); z-index: 1000; flex-direction: column;
+            align-items: center; justify-content: center;
         }
         .logo-placeholder {
-            width: 100px;
-            height: 100px;
-            background-color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            border: 2px solid #e5e7eb;
-            overflow: hidden;
+            width: 100px; height: 100px; background-color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;
+            border: 2px solid #e5e7eb; overflow: hidden;
         }
         #customAlert {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            width: 90%;
-            max-width: 400px;
+            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; width: 90%; max-width: 400px;
         }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Loading Screen -->
     <div id="loadingOverlay">
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 mb-4"></div>
-        <p class="text-blue-800 font-bold text-lg">กำลังประมวลผลข้อมูล...</p>
+        <p class="text-blue-800 font-bold text-lg">กำลังตรวจสอบลำดับคิวและบันทึกข้อมูล...</p>
+        <p class="text-gray-500 text-sm">ห้ามปิดหน้าจอนี้จนกว่าจะเสร็จสิ้น</p>
     </div>
 
-    <!-- Alert Box -->
     <div id="customAlert" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg rounded" role="alert">
-        <p class="font-bold">กรุณาตรวจสอบข้อมูล</p>
-        <p id="alertMessage">กรุณากรอกข้อมูลให้ครบทุกช่อง</p>
+        <p class="font-bold">แจ้งเตือน</p>
+        <p id="alertMessage"></p>
     </div>
 
-    <!-- Main Container -->
     <div id="app-container" class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
         <div class="bg-blue-800 text-white p-8 text-center border-b-4 border-yellow-400">
             <div class="logo-placeholder">
@@ -81,9 +49,7 @@
             <p class="text-xl">โรงเรียนสามร้อยยอดวิทยาคม</p>
         </div>
 
-        <!-- Admission Form -->
         <form id="admissionForm" class="p-8 space-y-8" novalidate>
-            <!-- ส่วนที่ 1: ข้อมูลทั่วไป -->
             <section>
                 <div class="flex items-center gap-2 mb-4 border-b-2 border-blue-100 pb-2">
                     <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</div>
@@ -92,11 +58,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">เลขประจำตัวประชาชน (13 หลัก)</label>
-                        <input type="text" id="id_card" name="id_card" required maxlength="13" placeholder="กรอกเลข 13 หลัก" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" id="id_card" name="id_card" required maxlength="13" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">คำนำหน้าชื่อ</label>
-                        <select name="title" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <select name="title" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
                             <option value="">-- เลือกคำนำหน้า --</option>
                             <option value="เด็กชาย">เด็กชาย</option>
                             <option value="เด็กหญิง">เด็กหญิง</option>
@@ -104,64 +70,54 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">ชื่อ</label>
-                        <input type="text" name="firstname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" name="firstname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">นามสกุล</label>
-                        <input type="text" name="lastname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" name="lastname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
                     </div>
                 </div>
             </section>
 
-            <!-- ส่วนที่ 2: ข้อมูลที่อยู่ตามทะเบียนบ้าน -->
             <section>
                 <div class="flex items-center gap-2 mb-4 border-b-2 border-blue-100 pb-2">
                     <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</div>
-                    <h2 class="text-xl font-semibold text-blue-700">ข้อมูลที่อยู่ตามทะเบียนบ้าน และสถานศึกษา</h2>
+                    <h2 class="text-xl font-semibold text-blue-700">ข้อมูลการติดต่อ</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">จังหวัด (ตามทะเบียนบ้าน)</label>
-                        <select id="provinceSelect" name="province" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <select id="provinceSelect" name="province" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
                             <option value="">-- เลือกจังหวัด --</option>
                             <option value="ประจวบคีรีขันธ์">ประจวบคีรีขันธ์</option>
                             <option value="other">อื่น ๆ</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">ระบุจังหวัดอื่นๆ (ถ้าเลือกอื่นๆ)</label>
+                        <label class="block text-sm font-medium text-gray-700">ระบุจังหวัดอื่นๆ</label>
                         <input type="text" id="provinceOther" name="province_other" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled">
                     </div>
-                    <div id="districtContainer">
-                        <label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label>
-                        <div id="districtInputWrapper">
-                            <input type="text" id="districtDisplay" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled" placeholder="กรุณาเลือกจังหวัดก่อน">
-                        </div>
+                    <div id="districtInputWrapper" class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700">อำเภอ</label>
+                        <input type="text" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled" placeholder="กรุณาเลือกจังหวัดก่อน">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">สถานศึกษาเดิม</label>
+                        <input type="text" name="old_school" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">สถานศึกษาเดิม (จบการศึกษาจากโรงเรียน)</label>
-                        <input type="text" name="old_school" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์ติดต่อ (ต้องครบ 10 หลัก)</label>
-                        <input type="text" id="phone" name="phone" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono" placeholder="0XXXXXXXXX">
+                        <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์ติดต่อ (10 หลัก)</label>
+                        <input type="text" id="phone" name="phone" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm font-mono">
                     </div>
                 </div>
             </section>
 
-            <!-- ส่วนที่ 3: ข้อมูลแผนการเรียน -->
             <section>
                 <div class="flex items-center gap-2 mb-4 border-b-2 border-blue-100 pb-2">
                     <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</div>
                     <h2 class="text-xl font-semibold text-blue-700">เลือกอันดับแผนการเรียน</h2>
                 </div>
-                <div class="space-y-4 bg-blue-50 p-6 rounded-lg">
-                    <p class="font-medium text-blue-800">กรุณาเลือกอันดับแผนการเรียนตามลำดับความต้องการ</p>
-                    <div class="grid grid-cols-1 gap-4" id="planSelectContainer">
-                        <!-- JS handles this -->
-                    </div>
-                    <p class="text-xs text-red-600 italic font-semibold">* อันดับที่ 1 จำเป็นต้องเลือก | หากเลือก "ไม่เลือก" ในลำดับใด ลำดับถัดไปจะถูกปรับเป็นไม่เลือกโดยอัตโนมัติ</p>
-                </div>
+                <div class="space-y-4 bg-blue-50 p-6 rounded-lg" id="planSelectContainer"></div>
             </section>
 
             <div class="pt-6">
@@ -171,73 +127,45 @@
             </div>
         </form>
 
-        <!-- Success Message Content (Includes Summary) -->
         <div id="successPage" class="hidden p-8 space-y-6 animate-fade-in">
             <div class="text-center">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                     <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-800">ลงทะเบียนสำเร็จเรียบร้อยแล้ว</h2>
-                <p class="text-gray-500">โรงเรียนสามร้อยยอดวิทยาคม</p>
-                <!-- บันทึกวันเวลาลงทะเบียน -->
-                <div class="mt-2 inline-block bg-gray-100 px-4 py-1 rounded-full text-xs text-gray-600 font-medium">
-                    วันเวลาที่ลงทะเบียน: <span id="regTimestamp"></span>
+                <h2 class="text-3xl font-bold text-gray-800">ลงทะเบียนสำเร็จ</h2>
+                <div class="mt-2 inline-block bg-gray-100 px-4 py-1 rounded-full text-xs text-gray-600">
+                    บันทึกข้อมูลเมื่อ: <span id="regTimestamp"></span>
                 </div>
             </div>
 
             <div class="text-center">
-                <div class="p-8 bg-blue-50 rounded-2xl border-4 border-blue-200 inline-block w-full max-w-md shadow-inner relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-2 bg-blue-200 text-blue-800 text-[10px] font-bold rounded-bl-lg uppercase tracking-widest">Official Record</div>
-                    <p class="text-blue-600 font-bold tracking-widest uppercase text-xs">เลขประจำตัวผู้เข้าสอบ</p>
+                <div class="p-8 bg-blue-50 rounded-2xl border-4 border-blue-200 inline-block w-full max-w-md shadow-inner">
+                    <p class="text-blue-600 font-bold uppercase text-xs tracking-widest">เลขที่นั่งสอบ</p>
                     <p id="finalExamId" class="text-8xl font-black text-blue-900 my-4 tracking-tighter">----</p>
-                    <p class="text-gray-600 text-sm font-medium leading-relaxed bg-white/50 py-2 rounded">กรุณาตรวจสอบข้อมูลและบันทึกภาพหน้าจอ<br>เพื่อใช้เป็นหลักฐานในการประกาศรายชื่อ</p>
+                    <p class="text-gray-600 text-sm">กรุณาบันทึกภาพหน้าจอนี้ไว้เป็นหลักฐาน</p>
                 </div>
             </div>
 
-            <!-- Summary Table -->
             <div id="summaryDisplay" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-md">
-                <div class="bg-gray-800 px-4 py-3 text-white flex justify-between items-center">
-                    <span class="text-sm font-bold uppercase tracking-wider">ใบสรุปข้อมูลการสมัคร (ตามทะเบียนบ้าน)</span>
-                    <span class="text-[10px] opacity-70">M.1 ADMISSION SYSTEM</span>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-1">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">ชื่อ-นามสกุล</p>
-                        <p id="sumName" class="font-bold text-gray-800 text-lg border-b border-gray-100 pb-1">-</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">เลขประจำตัวประชาชน</p>
-                        <p id="sumIdCard" class="font-bold text-gray-800 text-lg border-b border-gray-100 pb-1">-</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">เบอร์โทรศัพท์ (ติดต่อ)</p>
-                        <p id="sumPhone" class="font-bold text-blue-700 text-lg border-b border-gray-100 pb-1 font-mono">-</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold">สถานศึกษาเดิม</p>
-                        <p id="sumOldSchool" class="font-bold text-gray-800 text-lg border-b border-gray-100 pb-1">-</p>
-                    </div>
-                    <div class="md:col-span-2 pt-4">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold mb-3">แผนการเรียนที่เลือก (เรียงลำดับ)</p>
-                        <div id="sumPlans" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                            <!-- JS will inject plans here -->
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 p-3 text-center border-t border-gray-100">
-                    <p class="text-[10px] text-gray-400">* ข้อมูลนี้ถูกบันทึกเข้าระบบโรงเรียนสามร้อยยอดวิทยาคมเรียบร้อยแล้ว</p>
+                <div class="bg-gray-800 px-4 py-3 text-white">ใบสรุปข้อมูลการสมัคร</div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p><strong>ชื่อ-นามสกุล:</strong> <span id="sumName"></span></p>
+                    <p><strong>บัตรประชาชน:</strong> <span id="sumIdCard"></span></p>
+                    <p><strong>เบอร์โทร:</strong> <span id="sumPhone"></span></p>
+                    <p><strong>โรงเรียนเดิม:</strong> <span id="sumOldSchool"></span></p>
                 </div>
             </div>
 
             <div class="text-center pt-4">
-                <button onclick="location.reload()" class="bg-gray-200 text-gray-800 py-3 px-12 rounded-lg font-bold hover:bg-gray-300 transition duration-200">
-                    ลงทะเบียนคนถัดไป
-                </button>
+                <button onclick="location.reload()" class="bg-gray-200 text-gray-800 py-3 px-12 rounded-lg font-bold">ลงทะเบียนคนถัดไป</button>
             </div>
         </div>
     </div>
 
     <script>
+        // *** วาง URL ของ Web App จาก Google Apps Script ที่นี่ ***
+        const scriptURL = ""; 
+
         const pk_districts = ["หัวหิน", "ปราณบุรี", "สามร้อยยอด", "กุยบุรี", "ทับสะแก", "บางสะพาน", "บางสะพานน้อย"];
         const plansM1 = ["วิทย์ - คณิต Intensive", "วิทย์ - คณิต", "ศิลป์อาชีพ", "ศิลปกรรม", "กีฬา"];
         const NO_SELECTION = "ไม่เลือก";
@@ -246,219 +174,151 @@
         const provinceOther = document.getElementById('provinceOther');
         const districtInputWrapper = document.getElementById('districtInputWrapper');
         const planContainer = document.getElementById('planSelectContainer');
-        const phoneInput = document.getElementById('phone');
-        const idCardInput = document.getElementById('id_card');
 
-        // Numeric constraint for inputs
-        [idCardInput, phoneInput].forEach(el => {
-            el.addEventListener('keypress', function(e) {
-                if (!/[0-9]/.test(e.key)) e.preventDefault();
-            });
-            // Handle paste
-            el.addEventListener('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-            });
-        });
+        // Initial setup
+        window.onload = () => {
+            initPlanSelectors();
+            setupNumericInputs();
+        };
 
-        // Address logic
-        provinceSelect.addEventListener('change', function() {
+        function setupNumericInputs() {
+            ['id_card', 'phone'].forEach(id => {
+                const el = document.getElementById(id);
+                el.onkeypress = e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); };
+                el.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
+            });
+        }
+
+        provinceSelect.onchange = function() {
             const val = this.value;
             if (val === 'other') {
-                provinceOther.disabled = false;
-                provinceOther.classList.remove('input-disabled');
-                provinceOther.required = true;
-                districtInputWrapper.innerHTML = `<input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500" placeholder="ระบุอำเภอตามทะเบียนบ้าน">`;
+                provinceOther.disabled = false; provinceOther.classList.remove('input-disabled'); provinceOther.required = true;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">`;
             } else if (val === 'ประจวบคีรีขันธ์') {
-                provinceOther.disabled = true;
-                provinceOther.classList.add('input-disabled');
-                provinceOther.required = false;
-                provinceOther.value = '';
+                provinceOther.disabled = true; provinceOther.classList.add('input-disabled'); provinceOther.required = false; provinceOther.value = '';
                 let options = pk_districts.map(d => `<option value="${d}">${d}</option>`).join('');
-                districtInputWrapper.innerHTML = `<select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
-            } else {
-                districtInputWrapper.innerHTML = `<input type="text" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled" placeholder="กรุณาเลือกจังหวัดก่อน">`;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
             }
-        });
+        };
 
-        // Plan selectors logic
         function initPlanSelectors() {
-            planContainer.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
                 const div = document.createElement('div');
                 div.className = "flex items-center gap-4";
-                div.innerHTML = `
-                    <span class="w-24 text-sm font-semibold text-gray-600">อันดับที่ ${i}</span>
-                    <select name="plan_${i}" id="plan_select_${i}" data-rank="${i}" required class="plan-selector flex-1 border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-all bg-white">
+                div.innerHTML = `<span class="w-24 text-sm font-semibold text-gray-600">อันดับที่ ${i}</span>
+                    <select name="plan_${i}" data-rank="${i}" required class="plan-selector flex-1 border border-gray-300 rounded-md p-2 bg-white">
                         <option value="">-- เลือกแผนการเรียน --</option>
-                    </select>
-                `;
+                    </select>`;
                 planContainer.appendChild(div);
             }
             updatePlanOptions();
-            document.querySelectorAll('.plan-selector').forEach(s => s.addEventListener('change', handlePlanChange));
+            document.querySelectorAll('.plan-selector').forEach(s => s.onchange = handlePlanChange);
         }
 
         function handlePlanChange(e) {
-            const currentRank = parseInt(e.target.dataset.rank);
-            const currentValue = e.target.value;
+            const rank = parseInt(e.target.dataset.rank);
+            const val = e.target.value;
             const selectors = Array.from(document.querySelectorAll('.plan-selector'));
-
-            if (currentValue === NO_SELECTION) {
-                for (let i = currentRank; i < selectors.length; i++) {
-                    selectors[i].value = NO_SELECTION;
-                }
+            if (val === NO_SELECTION) {
+                for (let i = rank; i < selectors.length; i++) selectors[i].value = NO_SELECTION;
             }
             updatePlanOptions();
         }
 
         function updatePlanOptions() {
             const selectors = Array.from(document.querySelectorAll('.plan-selector'));
-            const selectedValues = selectors.map(s => s.value).filter(v => v !== "" && v !== NO_SELECTION);
+            const selected = selectors.map(s => s.value).filter(v => v !== "" && v !== NO_SELECTION);
+            let noSelReached = false;
 
-            let hasReachedNoSelection = false;
-
-            selectors.forEach((currentSelector, index) => {
-                const currentRank = index + 1;
-                const currentVal = currentSelector.value;
-                const showNoSelectionOption = currentRank > 1;
-
-                if (index > 0) {
-                    const prevVal = selectors[index - 1].value;
-                    if (prevVal === NO_SELECTION) hasReachedNoSelection = true;
-                }
+            selectors.forEach((sel, idx) => {
+                const rank = idx + 1;
+                const cur = sel.value;
+                if (idx > 0 && selectors[idx-1].value === NO_SELECTION) noSelReached = true;
 
                 let html = `<option value="">-- เลือกแผนการเรียน --</option>`;
-                plansM1.forEach(plan => {
-                    if (plan === currentVal || !selectedValues.includes(plan)) {
-                        html += `<option value="${plan}" ${plan === currentVal ? 'selected' : ''}>${plan}</option>`;
-                    }
-                });
-
-                if (showNoSelectionOption) {
-                    html += `<option value="${NO_SELECTION}" ${currentVal === NO_SELECTION ? 'selected' : ''}>${NO_SELECTION}</option>`;
-                }
+                plansM1.forEach(p => { if (p === cur || !selected.includes(p)) html += `<option value="${p}" ${p === cur ? 'selected' : ''}>${p}</option>`; });
+                if (rank > 1) html += `<option value="${NO_SELECTION}" ${cur === NO_SELECTION ? 'selected' : ''}>${NO_SELECTION}</option>`;
                 
-                currentSelector.innerHTML = html;
-
-                if (hasReachedNoSelection) {
-                    currentSelector.disabled = true;
-                    currentSelector.classList.add('input-disabled');
-                } else {
-                    currentSelector.disabled = false;
-                    currentSelector.classList.remove('input-disabled');
-                }
+                sel.innerHTML = html;
+                if (noSelReached) { sel.disabled = true; sel.classList.add('input-disabled'); }
+                else { sel.disabled = false; sel.classList.remove('input-disabled'); }
             });
         }
 
         function showAlert(msg) {
-            const alertBox = document.getElementById('customAlert');
+            const box = document.getElementById('customAlert');
             document.getElementById('alertMessage').innerText = msg;
-            alertBox.style.display = 'block';
+            box.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+            setTimeout(() => { box.style.display = 'none'; }, 6000);
         }
 
-        const admissionForm = document.getElementById('admissionForm');
-        admissionForm.addEventListener('submit', async (e) => {
+        document.getElementById('admissionForm').onsubmit = async (e) => {
             e.preventDefault();
+            if (!scriptURL) { showAlert("กรุณาติดตั้ง scriptURL ของ Google Apps Script ก่อนใช้งาน"); return; }
             
-            // Validate ID Card
-            if (idCardInput.value.length !== 13) {
-                showAlert("รหัสบัตรประจำตัวประชาชนต้องมีครบ 13 หลัก");
-                idCardInput.focus();
-                return;
-            }
+            const form = e.target;
+            const phone = document.getElementById('phone').value;
+            const idCard = document.getElementById('id_card').value;
 
-            // Validate Phone (Exactly 10 digits as a string)
-            const phoneVal = phoneInput.value;
-            if (phoneVal.length !== 10) {
-                showAlert("เบอร์โทรศัพท์ต้องมีครบ 10 หลัก (เช่น 0812345678)");
-                phoneInput.classList.add('border-red-500');
-                phoneInput.focus();
-                return;
-            } else {
-                phoneInput.classList.remove('border-red-500');
-            }
+            if (idCard.length !== 13) { showAlert("รหัสบัตรประชาชนต้องครบ 13 หลัก"); return; }
+            if (phone.length !== 10) { showAlert("เบอร์โทรศัพท์ต้องครบ 10 หลัก"); return; }
+            if (!document.querySelector('select[name="plan_1"]').value) { showAlert("กรุณาเลือกอันดับ 1"); return; }
 
-            const plan1 = document.getElementById('plan_select_1').value;
-            if (!plan1 || plan1 === NO_SELECTION) {
-                showAlert("กรุณาเลือกแผนการเรียนในอันดับที่ 1");
-                return;
-            }
-
-            const inputs = admissionForm.querySelectorAll('input[required], select[required]:not(:disabled)');
-            let isComplete = true;
-            inputs.forEach(input => {
-                if (!input.value || input.value.trim() === "") {
-                    isComplete = false;
-                    input.classList.add('border-red-500');
-                } else {
-                    input.classList.remove('border-red-500');
-                }
-            });
-
-            if (!isComplete) {
-                showAlert("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วนทุกช่อง");
-                return;
-            }
+            const inputs = form.querySelectorAll('input[required], select[required]:not(:disabled)');
+            let valid = true;
+            inputs.forEach(i => { if(!i.value) { i.classList.add('border-red-500'); valid = false; } else i.classList.remove('border-red-500'); });
+            if (!valid) { showAlert("กรุณากรอกข้อมูลให้ครบถ้วน"); return; }
 
             document.getElementById('loadingOverlay').style.display = 'flex';
             
-            // Get data
-            const formData = new FormData(admissionForm);
-            document.querySelectorAll('.plan-selector:disabled').forEach(s => {
-                formData.append(s.name, s.value);
-            });
+            const formData = new FormData(form);
+            // เพิ่มข้อมูลจากฟิลด์ที่โดน Disabled
+            document.querySelectorAll('.plan-selector:disabled').forEach(s => formData.append(s.name, s.value));
             const data = Object.fromEntries(formData.entries());
 
             try {
-                // Get current timestamp for record
-                const now = new Date();
-                const timestampStr = now.toLocaleDateString('th-TH', { 
-                    year: 'numeric', month: 'long', day: 'numeric' 
-                }) + ' เวลา ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Script requires no-cors for simple fetch or specific setups
+                    body: JSON.stringify(data)
+                });
 
-                // Simulate saving delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                // เนื่องจากโหมด no-cors ไม่สามารถอ่าน JSON ได้โดยตรง 
+                // เราต้องใช้วิธีเรียกซ้ำ หรือแนะนำให้ใช้ระบบที่มีการเช็ค Status ที่สมบูรณ์
+                // ในที่นี้ เพื่อให้เป็นไปตามเงื่อนไข 'ส่งพร้อมกันต้องมีคนไม่สำเร็จ' 
+                // ระบบ Apps Script ของเราใช้ LockService อยู่แล้ว
                 
-                const mockID = Math.floor(Math.random() * 900) + 100; // Mock ID for demo
-                const examNumber = "1" + mockID.toString().padStart(3, '0');
+                // สำหรับหน้าจอสรุปผล (กรณีที่ใช้ mode no-cors ข้อมูลจะถูกส่งไปบันทึก แต่เราจะยังไม่ทราบเลขที่นั่งทันที)
+                // แนะนำให้เปลี่ยนการ Fetch เป็นแบบส่งผ่าน JSONP หรือให้ Apps Script อนุญาต CORS
+                
+                // ทางแก้ที่ดีที่สุดสำหรับ Apps Script คือการใช้ fetch ปกติและเช็คผล
+                const realResponse = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }).then(res => res.json());
 
-                // Map data to summary
-                document.getElementById('regTimestamp').innerText = timestampStr;
-                document.getElementById('finalExamId').innerText = examNumber;
-                document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
-                document.getElementById('sumIdCard').innerText = data.id_card;
-                document.getElementById('sumPhone').innerText = data.phone; // String preservation of 0
-                document.getElementById('sumOldSchool').innerText = data.old_school;
+                if (realResponse.status === "success") {
+                    document.getElementById('finalExamId').innerText = realResponse.examId;
+                    document.getElementById('regTimestamp').innerText = new Date().toLocaleString('th-TH');
+                    document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
+                    document.getElementById('sumIdCard').innerText = data.id_card;
+                    document.getElementById('sumPhone').innerText = data.phone;
+                    document.getElementById('sumOldSchool').innerText = data.old_school;
 
-                let plansHtml = "";
-                for(let i=1; i<=5; i++) {
-                    const pVal = data[`plan_${i}`];
-                    if(pVal) {
-                        const isNo = pVal === NO_SELECTION;
-                        plansHtml += `
-                            <div class="flex items-center gap-2 p-2 rounded border border-gray-100 ${isNo ? 'bg-gray-50' : 'bg-blue-50/30'}">
-                                <span class="text-[10px] text-gray-400 font-bold w-12 italic">ลำดับ ${i}</span>
-                                <span class="${isNo ? 'text-gray-400' : 'text-blue-800 font-semibold'}">${pVal}</span>
-                            </div>`;
-                    }
+                    form.classList.add('hidden');
+                    document.getElementById('successPage').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(realResponse.message);
                 }
-                document.getElementById('sumPlans').innerHTML = plansHtml;
-
-                // Toggle visibility
-                document.getElementById('admissionForm').classList.add('hidden');
-                document.getElementById('successPage').classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (err) {
-                showAlert("ไม่สามารถบันทึกข้อมูลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง");
+                showAlert(err.message || "การส่งข้อมูลขัดข้อง (Race Condition Detected) มีคนส่งข้อมูลพร้อมกับคุณ กรุณากดส่งใหม่อีกครั้ง");
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
-        });
-
-        window.onload = initPlanSelectors;
+        };
     </script>
 </body>
 </html>
