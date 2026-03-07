@@ -57,8 +57,8 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">เลขประจำตัวประชาชน (13 หลัก)</label>
-                        <input type="text" id="id_card" name="id_card" required maxlength="13" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-sm font-medium text-gray-700">เลขประจำตัวประชาชน / รหัส G (13 หลัก)</label>
+                        <input type="text" id="id_card" name="id_card" required maxlength="13" placeholder="กรอกเลข 13 หลัก" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 uppercase">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">คำนำหน้าชื่อ</label>
@@ -82,7 +82,7 @@
             <section>
                 <div class="flex items-center gap-2 mb-4 border-b-2 border-blue-100 pb-2">
                     <div class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</div>
-                    <h2 class="text-xl font-semibold text-blue-700">ข้อมูลการติดต่อ</h2>
+                    <h2 class="text-xl font-semibold text-blue-700">ข้อมูลการติดต่อ (ตามทะเบียนบ้าน)</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -94,11 +94,11 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">ระบุจังหวัดอื่นๆ</label>
+                        <label class="block text-sm font-medium text-gray-700">ระบุจังหวัดอื่นๆ (ตามทะเบียนบ้าน)</label>
                         <input type="text" id="provinceOther" name="province_other" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled">
                     </div>
                     <div id="districtInputWrapper" class="md:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700">อำเภอ</label>
+                        <label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label>
                         <input type="text" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled" placeholder="กรุณาเลือกจังหวัดก่อน">
                     </div>
                     <div>
@@ -150,7 +150,7 @@
                 <div class="bg-gray-800 px-4 py-3 text-white">ใบสรุปข้อมูลการสมัคร</div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <p><strong>ชื่อ-นามสกุล:</strong> <span id="sumName"></span></p>
-                    <p><strong>บัตรประชาชน:</strong> <span id="sumIdCard"></span></p>
+                    <p><strong>รหัสประจำตัว:</strong> <span id="sumIdCard"></span></p>
                     <p><strong>เบอร์โทร:</strong> <span id="sumPhone"></span></p>
                     <p><strong>โรงเรียนเดิม:</strong> <span id="sumOldSchool"></span></p>
                 </div>
@@ -178,26 +178,31 @@
         // Initial setup
         window.onload = () => {
             initPlanSelectors();
-            setupNumericInputs();
+            setupInputValidation();
         };
 
-        function setupNumericInputs() {
-            ['id_card', 'phone'].forEach(id => {
-                const el = document.getElementById(id);
-                el.onkeypress = e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); };
-                el.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
-            });
+        function setupInputValidation() {
+            // เบอร์โทรศัพท์ - บังคับเฉพาะตัวเลข
+            const phoneInput = document.getElementById('phone');
+            phoneInput.onkeypress = e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); };
+            phoneInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
+
+            // เลขบัตรประชาชน/รหัส G - บังคับความยาว 13 ตัวอักษร (พิมพ์ตัวอักษรได้)
+            const idCardInput = document.getElementById('id_card');
+            idCardInput.oninput = function() { 
+                if (this.value.length > 13) this.value = this.value.slice(0, 13);
+            };
         }
 
         provinceSelect.onchange = function() {
             const val = this.value;
             if (val === 'other') {
                 provinceOther.disabled = false; provinceOther.classList.remove('input-disabled'); provinceOther.required = true;
-                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">`;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">`;
             } else if (val === 'ประจวบคีรีขันธ์') {
                 provinceOther.disabled = true; provinceOther.classList.add('input-disabled'); provinceOther.required = false; provinceOther.value = '';
                 let options = pk_districts.map(d => `<option value="${d}">${d}</option>`).join('');
-                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
             }
         };
 
@@ -261,7 +266,7 @@
             const phone = document.getElementById('phone').value;
             const idCard = document.getElementById('id_card').value;
 
-            if (idCard.length !== 13) { showAlert("รหัสบัตรประชาชนต้องครบ 13 หลัก"); return; }
+            if (idCard.length !== 13) { showAlert("เลขประจำตัวประชาชนต้องครบ 13 หลัก"); return; }
             if (phone.length !== 10) { showAlert("เบอร์โทรศัพท์ต้องครบ 10 หลัก"); return; }
             if (!document.querySelector('select[name="plan_1"]').value) { showAlert("กรุณาเลือกอันดับ 1"); return; }
 
@@ -273,33 +278,17 @@
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             const formData = new FormData(form);
-            // เพิ่มข้อมูลจากฟิลด์ที่โดน Disabled
             document.querySelectorAll('.plan-selector:disabled').forEach(s => formData.append(s.name, s.value));
             const data = Object.fromEntries(formData.entries());
 
             try {
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // Google Script requires no-cors for simple fetch or specific setups
-                    body: JSON.stringify(data)
-                });
-
-                // เนื่องจากโหมด no-cors ไม่สามารถอ่าน JSON ได้โดยตรง 
-                // เราต้องใช้วิธีเรียกซ้ำ หรือแนะนำให้ใช้ระบบที่มีการเช็ค Status ที่สมบูรณ์
-                // ในที่นี้ เพื่อให้เป็นไปตามเงื่อนไข 'ส่งพร้อมกันต้องมีคนไม่สำเร็จ' 
-                // ระบบ Apps Script ของเราใช้ LockService อยู่แล้ว
-                
-                // สำหรับหน้าจอสรุปผล (กรณีที่ใช้ mode no-cors ข้อมูลจะถูกส่งไปบันทึก แต่เราจะยังไม่ทราบเลขที่นั่งทันที)
-                // แนะนำให้เปลี่ยนการ Fetch เป็นแบบส่งผ่าน JSONP หรือให้ Apps Script อนุญาต CORS
-                
-                // ทางแก้ที่ดีที่สุดสำหรับ Apps Script คือการใช้ fetch ปกติและเช็คผล
-                const realResponse = await fetch(scriptURL, {
-                    method: 'POST',
                     body: JSON.stringify(data)
                 }).then(res => res.json());
 
-                if (realResponse.status === "success") {
-                    document.getElementById('finalExamId').innerText = realResponse.examId;
+                if (response.status === "success") {
+                    document.getElementById('finalExamId').innerText = response.examId;
                     document.getElementById('regTimestamp').innerText = new Date().toLocaleString('th-TH');
                     document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
                     document.getElementById('sumIdCard').innerText = data.id_card;
@@ -310,11 +299,11 @@
                     document.getElementById('successPage').classList.remove('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
-                    throw new Error(realResponse.message);
+                    throw new Error(response.message);
                 }
 
             } catch (err) {
-                showAlert(err.message || "การส่งข้อมูลขัดข้อง (Race Condition Detected) มีคนส่งข้อมูลพร้อมกับคุณ กรุณากดส่งใหม่อีกครั้ง");
+                showAlert(err.message || "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
             }
