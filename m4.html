@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบรับสมัครนักเรียน ม.4 - โรงเรียนสามร้อยยอดวิทยาคม</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #fffaf0; }
+        .input-disabled { background-color: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
+        #loadingOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); z-index: 1000; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .logo-placeholder {
+            width: 100px; height: 100px; background-color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;
+            border: 2px solid #fbbf24; overflow: hidden;
+        }
+        #customAlert {
+            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; width: 90%; max-width: 400px;
+        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="loadingOverlay">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-600 mb-4"></div>
+        <p class="text-orange-800 font-bold text-lg">กำลังตรวจสอบลำดับคิวและบันทึกข้อมูล...</p>
+        <p class="text-gray-500 text-sm">ห้ามปิดหน้าจอนี้จนกว่าจะเสร็จสิ้น</p>
+    </div>
+
+    <div id="customAlert" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg rounded" role="alert">
+        <p class="font-bold">แจ้งเตือน</p>
+        <p id="alertMessage"></p>
+    </div>
+
+    <div id="app-container" class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden border border-orange-100">
+        <!-- Header ปรับเป็นโทนส้ม-เหลือง -->
+        <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-8 text-center border-b-4 border-yellow-300">
+            <div class="logo-placeholder">
+                <img src="https://via.placeholder.com/100?text=LOGO" alt="School Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-2xl font-bold">ระบบรับสมัครนักเรียน ระดับชั้น ม.4</h1>
+            <p class="text-xl">โรงเรียนสามร้อยยอดวิทยาคม</p>
+        </div>
+
+        <form id="admissionForm" class="p-8 space-y-8" novalidate>
+            <section>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-orange-100 pb-2">
+                    <div class="bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</div>
+                    <h2 class="text-xl font-semibold text-orange-700">ข้อมูลทั่วไปของผู้สมัคร</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">เลขประจำตัวประชาชน / รหัส G (13 หลัก)</label>
+                        <input type="text" id="id_card" name="id_card" required maxlength="13" placeholder="กรอกเลข 13 หลัก" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-orange-500 focus:border-orange-500 uppercase">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">คำนำหน้าชื่อ</label>
+                        <select name="title" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">
+                            <option value="">-- เลือกคำนำหน้า --</option>
+                            <option value="เด็กชาย">เด็กชาย</option>
+                            <option value="เด็กหญิง">เด็กหญิง</option>
+                            <option value="นาย">นาย</option>
+                            <option value="นางสาว">นางสาว</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">ชื่อ</label>
+                        <input type="text" name="firstname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">นามสกุล</label>
+                        <input type="text" name="lastname" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-orange-100 pb-2">
+                    <div class="bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</div>
+                    <h2 class="text-xl font-semibold text-orange-700">ข้อมูลการติดต่อ (ตามทะเบียนบ้าน)</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">จังหวัด (ตามทะเบียนบ้าน)</label>
+                        <select id="provinceSelect" name="province" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            <option value="">-- เลือกจังหวัด --</option>
+                            <option value="ประจวบคีรีขันธ์">ประจวบคีรีขันธ์</option>
+                            <option value="other">อื่น ๆ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">ระบุจังหวัดอื่นๆ (ตามทะเบียนบ้าน)</label>
+                        <input type="text" id="provinceOther" name="province_other" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled">
+                    </div>
+                    <div id="districtInputWrapper" class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label>
+                        <input type="text" disabled class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm input-disabled" placeholder="กรุณาเลือกจังหวัดก่อน">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">สถานศึกษาเดิม</label>
+                        <input type="text" name="old_school" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์ติดต่อ (10 หลัก)</label>
+                        <input type="text" id="phone" name="phone" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm font-mono focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-orange-100 pb-2">
+                    <div class="bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</div>
+                    <h2 class="text-xl font-semibold text-orange-700">เลือกอันดับแผนการเรียน</h2>
+                </div>
+                <!-- ปรับสีพื้นหลังอันดับแผนการเรียน -->
+                <div class="space-y-4 bg-orange-50 p-6 rounded-lg" id="planSelectContainer"></div>
+            </section>
+
+            <div class="pt-6">
+                <button type="submit" class="w-full bg-orange-600 text-white py-4 rounded-md hover:bg-orange-700 transition font-bold text-xl shadow-lg border-b-4 border-orange-800 active:border-b-0 active:translate-y-1">
+                    ยืนยันการลงทะเบียน ม.4
+                </button>
+            </div>
+        </form>
+
+        <div id="successPage" class="hidden p-8 space-y-6 animate-fade-in">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">ลงทะเบียนสำเร็จ</h2>
+                <div class="mt-2 inline-block bg-gray-100 px-4 py-1 rounded-full text-xs text-gray-600">
+                    บันทึกข้อมูลเมื่อ: <span id="regTimestamp"></span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <!-- ปรับสีการแสดงผลเลขที่นั่งสอบ -->
+                <div class="p-8 bg-orange-50 rounded-2xl border-4 border-orange-200 inline-block w-full max-w-md shadow-inner">
+                    <p class="text-orange-600 font-bold uppercase text-xs tracking-widest">เลขที่นั่งสอบ ม.4</p>
+                    <p id="finalExamId" class="text-8xl font-black text-orange-900 my-4 tracking-tighter">----</p>
+                    <p class="text-gray-600 text-sm">กรุณาบันทึกภาพหน้าจอนี้ไว้เป็นหลักฐาน</p>
+                </div>
+            </div>
+
+            <div id="summaryDisplay" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-md">
+                <div class="bg-orange-800 px-4 py-3 text-white font-bold">ใบสรุปข้อมูลการสมัคร (ระดับชั้น ม.4)</div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p><strong>ชื่อ-นามสกุล:</strong> <span id="sumName"></span></p>
+                    <p><strong>รหัสประจำตัว:</strong> <span id="sumIdCard"></span></p>
+                    <p><strong>เบอร์โทร:</strong> <span id="sumPhone"></span></p>
+                    <p><strong>โรงเรียนเดิม:</strong> <span id="sumOldSchool"></span></p>
+                </div>
+            </div>
+
+            <div class="text-center pt-4">
+                <button onclick="location.reload()" class="bg-gray-200 text-gray-800 py-3 px-12 rounded-lg font-bold hover:bg-gray-300">ลงทะเบียนคนถัดไป</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // *** วาง URL ของ Web App จาก Google Apps Script ที่นี่ ***
+        const scriptURL = "https://script.google.com/macros/s/AKfycbz9RNuZUMITWFCfGa2PWc6UChEJ6d1wwb88Hh7HLU_VanuRdTKvAu2hq_YpZlNwyPRN3w/exec"; 
+
+        const pk_districts = ["หัวหิน", "ปราณบุรี", "สามร้อยยอด", "กุยบุรี", "ทับสะแก", "บางสะพาน", "บางสะพานน้อย"];
+        
+        // รายการแผนการเรียน ม.4 ใหม่ตามที่ระบุ
+        const plansM4 = [
+            "วิทย์ - คณิต Intensive", 
+            "วิทย์ - คณิต", 
+            "ศิลป์ - คณิต Intensive", 
+            "รัฐศาสตร์ - นิติศาสตร์", 
+            "เรียนศิลป์ - ภาษาจีน", 
+            "นิเทศ – ศิลป์"
+        ];
+        const NO_SELECTION = "ไม่เลือก";
+
+        const provinceSelect = document.getElementById('provinceSelect');
+        const provinceOther = document.getElementById('provinceOther');
+        const districtInputWrapper = document.getElementById('districtInputWrapper');
+        const planContainer = document.getElementById('planSelectContainer');
+
+        // Initial setup
+        window.onload = () => {
+            initPlanSelectors();
+            setupInputValidation();
+        };
+
+        function setupInputValidation() {
+            // เบอร์โทรศัพท์ - บังคับเฉพาะตัวเลข
+            const phoneInput = document.getElementById('phone');
+            phoneInput.onkeypress = e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); };
+            phoneInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
+
+            // เลขบัตรประชาชน/รหัส G - พิมพ์ตัวอักษรได้ บังคับ 13 ตัว
+            const idCardInput = document.getElementById('id_card');
+            idCardInput.oninput = function() { 
+                if (this.value.length > 13) this.value = this.value.slice(0, 13);
+            };
+        }
+
+        provinceSelect.onchange = function() {
+            const val = this.value;
+            if (val === 'other') {
+                provinceOther.disabled = false; provinceOther.classList.remove('input-disabled'); provinceOther.required = true;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500">`;
+            } else if (val === 'ประจวบคีรีขันธ์') {
+                provinceOther.disabled = true; provinceOther.classList.add('input-disabled'); provinceOther.required = false; provinceOther.value = '';
+                let options = pk_districts.map(d => `<option value="${d}">${d}</option>`).join('');
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-orange-500 focus:border-orange-500"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
+            }
+        };
+
+        function initPlanSelectors() {
+            for (let i = 1; i <= 5; i++) {
+                const div = document.createElement('div');
+                div.className = "flex items-center gap-4";
+                div.innerHTML = `<span class="w-24 text-sm font-semibold text-gray-600">อันดับที่ ${i}</span>
+                    <select name="plan_${i}" data-rank="${i}" required class="plan-selector flex-1 border border-gray-300 rounded-md p-2 bg-white focus:ring-orange-500 focus:border-orange-500">
+                        <option value="">-- เลือกแผนการเรียน --</option>
+                    </select>`;
+                planContainer.appendChild(div);
+            }
+            updatePlanOptions();
+            document.querySelectorAll('.plan-selector').forEach(s => s.onchange = handlePlanChange);
+        }
+
+        function handlePlanChange(e) {
+            const rank = parseInt(e.target.dataset.rank);
+            const val = e.target.value;
+            const selectors = Array.from(document.querySelectorAll('.plan-selector'));
+            if (val === NO_SELECTION) {
+                for (let i = rank; i < selectors.length; i++) selectors[i].value = NO_SELECTION;
+            }
+            updatePlanOptions();
+        }
+
+        function updatePlanOptions() {
+            const selectors = Array.from(document.querySelectorAll('.plan-selector'));
+            const selected = selectors.map(s => s.value).filter(v => v !== "" && v !== NO_SELECTION);
+            let noSelReached = false;
+
+            selectors.forEach((sel, idx) => {
+                const rank = idx + 1;
+                const cur = sel.value;
+                if (idx > 0 && selectors[idx-1].value === NO_SELECTION) noSelReached = true;
+
+                let html = `<option value="">-- เลือกแผนการเรียน --</option>`;
+                plansM4.forEach(p => { 
+                    if (p === cur || !selected.includes(p)) html += `<option value="${p}" ${p === cur ? 'selected' : ''}>${p}</option>`; 
+                });
+                
+                // ทุกอันดับ (ยกเว้นอันดับ 1) ต้องมีตัวเลือก "ไม่เลือก"
+                if (rank > 1) html += `<option value="${NO_SELECTION}" ${cur === NO_SELECTION ? 'selected' : ''}>${NO_SELECTION}</option>`;
+                
+                sel.innerHTML = html;
+                if (noSelReached) { sel.disabled = true; sel.classList.add('input-disabled'); }
+                else { sel.disabled = false; sel.classList.remove('input-disabled'); }
+            });
+        }
+
+        function showAlert(msg) {
+            const box = document.getElementById('customAlert');
+            document.getElementById('alertMessage').innerText = msg;
+            box.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => { box.style.display = 'none'; }, 6000);
+        }
+
+        document.getElementById('admissionForm').onsubmit = async (e) => {
+            e.preventDefault();
+            if (!scriptURL) { showAlert("กรุณาติดตั้ง scriptURL ของ Google Apps Script ก่อนใช้งาน"); return; }
+            
+            const form = e.target;
+            const phone = document.getElementById('phone').value;
+            const idCard = document.getElementById('id_card').value;
+
+            if (idCard.length !== 13) { showAlert("เลขประจำตัวประชาชนต้องครบ 13 หลัก"); return; }
+            if (phone.length !== 10) { showAlert("เบอร์โทรศัพท์ต้องครบ 10 หลัก"); return; }
+            if (!document.querySelector('select[name="plan_1"]').value) { showAlert("กรุณาเลือกอันดับ 1"); return; }
+
+            const inputs = form.querySelectorAll('input[required], select[required]:not(:disabled)');
+            let valid = true;
+            inputs.forEach(i => { if(!i.value) { i.classList.add('border-red-500'); valid = false; } else i.classList.remove('border-red-500'); });
+            if (!valid) { showAlert("กรุณากรอกข้อมูลให้ครบถ้วน"); return; }
+
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            const formData = new FormData(form);
+            document.querySelectorAll('.plan-selector:disabled').forEach(s => formData.append(s.name, s.value));
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }).then(res => res.json());
+
+                if (response.status === "success") {
+                    document.getElementById('finalExamId').innerText = response.examId;
+                    document.getElementById('regTimestamp').innerText = new Date().toLocaleString('th-TH');
+                    document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
+                    document.getElementById('sumIdCard').innerText = data.id_card;
+                    document.getElementById('sumPhone').innerText = data.phone;
+                    document.getElementById('sumOldSchool').innerText = data.old_school;
+
+                    form.classList.add('hidden');
+                    document.getElementById('successPage').classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(response.message);
+                }
+
+            } catch (err) {
+                showAlert(err.message || "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
