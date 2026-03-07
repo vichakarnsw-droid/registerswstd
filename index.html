@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f3f4f6; }
+        body { font-family: 'Sarabun', sans-serif; background-color: #f3f4f6; display: flex; flex-direction: column; min-height: 100vh; }
         .input-disabled { background-color: #e5e7eb; cursor: not-allowed; opacity: 0.7; }
         #loadingOverlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -25,6 +25,16 @@
         }
         .animate-fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* สไตล์เพิ่มเติมสำหรับลำดับแผนการเรียน */
+        .plan-card {
+            transition: all 0.3s ease;
+            border-left-width: 4px;
+        }
+        .plan-card-selected { border-left-color: #2563eb; background-color: #eff6ff; }
+        .plan-card-none { border-left-color: #d1d5db; background-color: #f9fafb; color: #9ca3af; }
+        
+        main { flex: 1; }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -40,13 +50,14 @@
         <p id="alertMessage"></p>
     </div>
 
-    <div id="app-container" class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+    <main id="app-container" class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden w-full">
         <div class="bg-blue-800 text-white p-8 text-center border-b-4 border-yellow-400">
             <div class="logo-placeholder">
                 <img src="https://via.placeholder.com/100?text=LOGO" alt="School Logo" class="w-full h-full object-contain">
             </div>
             <h1 class="text-2xl font-bold">ระบบรับสมัครนักเรียน ระดับชั้น ม.1</h1>
             <p class="text-xl">โรงเรียนสามร้อยยอดวิทยาคม</p>
+            <p class="text-sm opacity-80 mt-1">สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาประจวบคีรีขันธ์</p>
         </div>
 
         <form id="admissionForm" class="p-8 space-y-8" novalidate>
@@ -147,23 +158,59 @@
             </div>
 
             <div id="summaryDisplay" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-md">
-                <div class="bg-gray-800 px-4 py-3 text-white">ใบสรุปข้อมูลการสมัคร</div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <p><strong>ชื่อ-นามสกุล:</strong> <span id="sumName"></span></p>
-                    <p><strong>รหัสประจำตัว:</strong> <span id="sumIdCard"></span></p>
-                    <p><strong>เบอร์โทร:</strong> <span id="sumPhone"></span></p>
-                    <p><strong>โรงเรียนเดิม:</strong> <span id="sumOldSchool"></span></p>
+                <div class="bg-gray-800 px-4 py-3 text-white flex justify-between items-center">
+                    <span>ใบสรุปข้อมูลการสมัคร</span>
+                    <span class="text-xs opacity-70 italic">โรงเรียนสามร้อยยอดวิทยาคม</span>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-sm md:text-base border-b border-gray-100">
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">ชื่อ-นามสกุล</span>
+                        <span id="sumName" class="font-semibold text-gray-800 uppercase"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">รหัสประจำตัวประชาชน</span>
+                        <span id="sumIdCard" class="font-semibold text-gray-800 tracking-wider"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">ที่อยู่ (จังหวัด)</span>
+                        <span id="sumProvince" class="font-semibold text-gray-800"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">ที่อยู่ (อำเภอ)</span>
+                        <span id="sumDistrict" class="font-semibold text-gray-800"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">โรงเรียนเดิม</span>
+                        <span id="sumOldSchool" class="font-semibold text-gray-800"></span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 text-xs">เบอร์โทรศัพท์</span>
+                        <span id="sumPhone" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="p-6 bg-gray-50">
+                    <p class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        ลำดับแผนการเรียนที่เลือก
+                    </p>
+                    <div id="sumPlans" class="grid grid-cols-1 gap-3">
+                        <!-- แผนการเรียนจะถูกเติมที่นี่ด้วย JS -->
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center pt-4">
-                <button onclick="location.reload()" class="bg-gray-200 text-gray-800 py-3 px-12 rounded-lg font-bold">ลงทะเบียนคนถัดไป</button>
+            <div class="text-center pt-4 pb-8">
+                <button onclick="location.reload()" class="bg-gray-200 text-gray-800 py-3 px-12 rounded-lg font-bold hover:bg-gray-300 transition">ลงทะเบียนคนถัดไป</button>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto w-full text-center py-8 text-gray-500 text-sm">
+        <p>พัฒนาเว็บไซต์โดย กลุ่มบริหารงานวิชาการ</p>
+        <p>โรงเรียนสามร้อยยอดวิทยาคม</p>
+    </footer>
 
     <script>
-        // *** วาง URL ของ Web App จาก Google Apps Script ที่นี่ ***
         const scriptURL = "https://script.google.com/macros/s/AKfycbz9RNuZUMITWFCfGa2PWc6UChEJ6d1wwb88Hh7HLU_VanuRdTKvAu2hq_YpZlNwyPRN3w/exec"; 
 
         const pk_districts = ["หัวหิน", "ปราณบุรี", "สามร้อยยอด", "กุยบุรี", "ทับสะแก", "บางสะพาน", "บางสะพานน้อย"];
@@ -175,19 +222,16 @@
         const districtInputWrapper = document.getElementById('districtInputWrapper');
         const planContainer = document.getElementById('planSelectContainer');
 
-        // Initial setup
         window.onload = () => {
             initPlanSelectors();
             setupInputValidation();
         };
 
         function setupInputValidation() {
-            // เบอร์โทรศัพท์ - บังคับเฉพาะตัวเลข
             const phoneInput = document.getElementById('phone');
             phoneInput.onkeypress = e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); };
             phoneInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
 
-            // เลขบัตรประชาชน/รหัส G - บังคับความยาว 13 ตัวอักษร (พิมพ์ตัวอักษรได้)
             const idCardInput = document.getElementById('id_card');
             idCardInput.oninput = function() { 
                 if (this.value.length > 13) this.value = this.value.slice(0, 13);
@@ -198,11 +242,11 @@
             const val = this.value;
             if (val === 'other') {
                 provinceOther.disabled = false; provinceOther.classList.remove('input-disabled'); provinceOther.required = true;
-                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">`;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><input type="text" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm">`;
             } else if (val === 'ประจวบคีรีขันธ์') {
                 provinceOther.disabled = true; provinceOther.classList.add('input-disabled'); provinceOther.required = false; provinceOther.value = '';
                 let options = pk_districts.map(d => `<option value="${d}">${d}</option>`).join('');
-                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
+                districtInputWrapper.innerHTML = `<label class="block text-sm font-medium text-gray-700">อำเภอ (ตามทะเบียนบ้าน)</label><select name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"><option value="">-- เลือกอำเภอ --</option>${options}</select>`;
             }
         };
 
@@ -211,7 +255,7 @@
                 const div = document.createElement('div');
                 div.className = "flex items-center gap-4";
                 div.innerHTML = `<span class="w-24 text-sm font-semibold text-gray-600">อันดับที่ ${i}</span>
-                    <select name="plan_${i}" data-rank="${i}" required class="plan-selector flex-1 border border-gray-300 rounded-md p-2 bg-white">
+                    <select name="plan_${i}" data-rank="${i}" required class="plan-selector flex-1 border border-gray-300 rounded-md p-2 bg-white shadow-sm focus:ring-2 focus:ring-blue-500">
                         <option value="">-- เลือกแผนการเรียน --</option>
                     </select>`;
                 planContainer.appendChild(div);
@@ -260,8 +304,6 @@
 
         document.getElementById('admissionForm').onsubmit = async (e) => {
             e.preventDefault();
-            if (!scriptURL) { showAlert("กรุณาติดตั้ง scriptURL ของ Google Apps Script ก่อนใช้งาน"); return; }
-            
             const form = e.target;
             const phone = document.getElementById('phone').value;
             const idCard = document.getElementById('id_card').value;
@@ -278,8 +320,11 @@
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             const formData = new FormData(form);
+            // เก็บข้อมูลตัวที่ disabled (ที่ระบบเลือกให้อัตโนมัติว่าเป็น "ไม่เลือก")
             document.querySelectorAll('.plan-selector:disabled').forEach(s => formData.append(s.name, s.value));
+            
             const data = Object.fromEntries(formData.entries());
+            if (data.province === 'other') data.province = data.province_other;
 
             try {
                 const response = await fetch(scriptURL, {
@@ -290,10 +335,32 @@
                 if (response.status === "success") {
                     document.getElementById('finalExamId').innerText = response.examId;
                     document.getElementById('regTimestamp').innerText = new Date().toLocaleString('th-TH');
+                    
+                    // อัปเดตข้อมูลทั่วไป
                     document.getElementById('sumName').innerText = `${data.title}${data.firstname} ${data.lastname}`;
                     document.getElementById('sumIdCard').innerText = data.id_card;
-                    document.getElementById('sumPhone').innerText = data.phone;
+                    document.getElementById('sumProvince').innerText = data.province;
+                    document.getElementById('sumDistrict').innerText = data.district;
                     document.getElementById('sumOldSchool').innerText = data.old_school;
+                    document.getElementById('sumPhone').innerText = data.phone;
+
+                    // แสดงรายการแผนการเรียนแบบสวยงาม
+                    let plansHtml = '';
+                    for(let i=1; i<=5; i++) {
+                        const pVal = data[`plan_${i}`] || NO_SELECTION;
+                        const isNone = pVal === NO_SELECTION;
+                        
+                        plansHtml += `
+                            <div class="plan-card ${isNone ? 'plan-card-none' : 'plan-card-selected'} p-3 rounded-md flex justify-between items-center shadow-sm border border-gray-200">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex items-center justify-center w-6 h-6 rounded-full ${isNone ? 'bg-gray-200 text-gray-500' : 'bg-blue-600 text-white'} text-xs font-bold">${i}</span>
+                                    <span class="font-medium">${pVal}</span>
+                                </div>
+                                ${!isNone ? '<span class="text-blue-600"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></span>' : ''}
+                            </div>
+                        `;
+                    }
+                    document.getElementById('sumPlans').innerHTML = plansHtml;
 
                     form.classList.add('hidden');
                     document.getElementById('successPage').classList.remove('hidden');
