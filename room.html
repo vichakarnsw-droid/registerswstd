@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบจัดห้องสอบอัตโนมัติ 2569</title>
-    <link rel="icon" type="image/png" href="swlogo.png"> <!-- เพิ่มบรรทัดนี้ -->
+    <link rel="icon" type="image/png" href="swlogo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
@@ -67,7 +67,6 @@
     <main class="max-w-7xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden w-full mb-10 border border-blue-100">
         <!-- Header -->
         <div class="blue-gradient text-white p-10 text-center relative">
-            <!-- Removed version tag from here -->
             <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-xl border-4 border-white/20">
                 <img src="swlogo.png" alt="Logo" class="w-20 h-20 object-contain" onerror="this.src='https://via.placeholder.com/100?text=SW'">
             </div>
@@ -133,7 +132,7 @@
     <footer class="max-w-4xl mx-auto w-full text-center py-10 text-slate-400 text-sm">
         <p>พัฒนาเว็บไซต์โดย กลุ่มบริหารงานวิชาการ</p>
         <p>โรงเรียนสามร้อยยอดวิทยาคม</p>
-        <p>Ver 1.2.2</p>
+        <p>Ver 1.2.3</p>
     </footer>
 
     <script>
@@ -151,47 +150,38 @@
         };
 
         const PLAN_ICONS = {
-            // Science Intensive: Test Tube / Flask (Indigo)
             "วิทย์ - คณิต Intensive": {
                 color: "bg-indigo-50 text-indigo-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5M14 2v7.5"/><path d="M8.5 2h7"/><path d="M14 11.5c0 1.5 1.5 3 1.5 5.5s-1.5 5-3.5 5-3.5-2.5-3.5-5 1.5-4 1.5-5.5V2h4v9.5z"/><path d="M10.5 15.5h3"/><path d="M11 18h2"/><circle cx="15.5" cy="11.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="14.5" r="0.5" fill="currentColor"/></svg>`
             },
-            // Science Normal: Microscope Icon (Blue)
             "วิทย์ - คณิต": {
                 color: "bg-blue-50 text-blue-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 1 0-2-2V6h6v4a2 2 0 1 0-2 2v5"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>`
             },
-            // Sports: Soccer Ball Detailed (Orange)
             "กีฬา": {
                 color: "bg-orange-50 text-orange-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/><path d="M12 6L8.5 9h7L12 6z"/><path d="M12 18l3.5-3h-7l3.5 3z"/><path d="M6 12l3 3.5v-7L6 12z"/><path d="M18 12l-3-3.5v7l3-3.5z"/></svg>`
             },
-            // Vocational: (Emerald)
             "ศิลป์อาชีพ": {
                 color: "bg-emerald-50 text-emerald-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>`
             },
-            // Arts: (Pink)
             "ศิลปกรรม": {
                 color: "bg-pink-50 text-pink-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.5 1.5"/><path d="M2 2l1.5 7.5"/></svg>`
             },
-            // Math Intensive: (Cyan)
             "ศิลป์ - คณิต Intensive": {
                 color: "bg-cyan-50 text-cyan-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>`
             },
-            // Law: (Red)
             "รัฐศาสตร์ - นิติศาสตร์": {
                 color: "bg-red-50 text-red-700",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`
             },
-            // Chinese: (Amber)
             "เรียนศิลป์ - ภาษาจีน": {
                 color: "bg-amber-50 text-amber-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15h16M4 9h16M12 3v18"/></svg>`
             },
-            // Media Arts: (Violet)
             "นิเทศ – ศิลป์": {
                 color: "bg-violet-50 text-violet-600",
                 svg: `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>`
@@ -284,10 +274,62 @@
         function exportExcel(index) {
             const room = currentProcessedRooms[index];
             if (!room) return;
-            const dataRows = room.students.map((std, i) => [i + 1, std['เลขที่นั่งสอบ'] || '', std['เลขประจำตัวประชาชน'] || '', std['คำนำหน้าชื่อ'] || '', std['ชื่อ'] || '', std['นามสกุล'] || '', ""]);
-            const ws = XLSX.utils.aoa_to_sheet([["บัญชีรายชื่อผู้มีสิทธิ์สอบ"], [`แผนการเรียน: ${room.planName}`], [`เลขห้องสอบ: ${index + 1}`], [""], ["ลำดับที่", "เลขที่นั่งสอบ", "เลขประจำตัวประชาชน", "คำนำหน้าชื่อ", "ชื่อ", "นามสกุล", "หมายเหตุ"], ...dataRows]);
-            ws['!cols'] = [{ wch: 8 }, { wch: 15 }, { wch: 20 }, { wch: 12 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
-            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+            // คอลัมน์ที่ต้องการดึงข้อมูลอันดับ
+            const p1 = 'อันดับ 1';
+            const p2 = 'อันดับ 2';
+            const p3 = 'อันดับ 3';
+            const p4 = 'อันดับ 4';
+            const p5 = 'อันดับ 5';
+
+            const dataRows = room.students.map((std, i) => [
+                i + 1, 
+                std['เลขที่นั่งสอบ'] || '', 
+                std['เลขประจำตัวประชาชน'] || '', 
+                std['คำนำหน้าชื่อ'] || '', 
+                std['ชื่อ'] || '', 
+                std['นามสกุล'] || '', 
+                "", // หมายเหตุ
+                std[p1] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 1)'] || '',
+                std[p2] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 2)'] || '',
+                std[p3] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 3)'] || '',
+                std[p4] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 4)'] || '',
+                std[p5] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 5)'] || ''
+            ]);
+
+            const header = [
+                "ลำดับที่", 
+                "เลขที่นั่งสอบ", 
+                "เลขประจำตัวประชาชน", 
+                "คำนำหน้าชื่อ", 
+                "ชื่อ", 
+                "นามสกุล", 
+                "หมายเหตุ",
+                "อันดับ 1",
+                "อันดับ 2",
+                "อันดับ 3",
+                "อันดับ 4",
+                "อันดับ 5"
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet([
+                ["บัญชีรายชื่อผู้มีสิทธิ์สอบ"], 
+                [`แผนการเรียน: ${room.planName}`], 
+                [`เลขห้องสอบ: ${index + 1}`], 
+                [""], 
+                header, 
+                ...dataRows
+            ]);
+
+            // ปรับความกว้างคอลัมน์
+            ws['!cols'] = [
+                { wch: 8 }, { wch: 15 }, { wch: 20 }, { wch: 12 }, { wch: 20 }, 
+                { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 25 }, { wch: 25 }, 
+                { wch: 25 }, { wch: 25 }
+            ];
+
+            const wb = XLSX.utils.book_new(); 
+            XLSX.utils.book_append_sheet(wb, ws, "รายชื่อผู้มีสิทธิ์สอบ");
             XLSX.writeFile(wb, `ห้องที่${index + 1}_${room.planName}_${currentLevel}.xlsx`);
         }
 
