@@ -132,7 +132,7 @@
     <footer class="max-w-4xl mx-auto w-full text-center py-10 text-slate-400 text-sm">
         <p>พัฒนาเว็บไซต์โดย กลุ่มบริหารงานวิชาการ</p>
         <p>โรงเรียนสามร้อยยอดวิทยาคม</p>
-        <p>Ver 1.2.3</p>
+        <p>Ver 1.3.0</p>
     </footer>
 
     <script>
@@ -275,57 +275,101 @@
             const room = currentProcessedRooms[index];
             if (!room) return;
 
-            // คอลัมน์ที่ต้องการดึงข้อมูลอันดับ
-            const p1 = 'อันดับ 1';
-            const p2 = 'อันดับ 2';
-            const p3 = 'อันดับ 3';
-            const p4 = 'อันดับ 4';
-            const p5 = 'อันดับ 5';
+            // คอลัมน์ที่ต้องการดึงข้อมูล
+            const colMapping = {
+                seatNo: ['เลขที่นั่งสอบ'],
+                regDate: ['วันที่ลงทะเบียน', 'Timestamp', 'ประทับเวลา'],
+                idCard: ['เลขประจำตัวประชาชน'],
+                prefix: ['คำนำหน้าชื่อ'],
+                firstName: ['ชื่อ'],
+                lastName: ['นามสกุล'],
+                province: ['จังหวัด'],
+                district: ['อำเภอ'],
+                oldSchool: ['สถานศึกษาเดิม'],
+                phone: ['เบอร์โทรศัพท์', 'เบอร์โทรศัพท์มือถือ'],
+                p1: ['อันดับ 1', 'แผนการเรียนที่ต้องการสมัคร (อันดับ 1)', 'แผนการเรียนอันดับ 1'],
+                p2: ['อันดับ 2', 'แผนการเรียนที่ต้องการสมัคร (อันดับ 2)', 'แผนการเรียนอันดับ 2'],
+                p3: ['อันดับ 3', 'แผนการเรียนที่ต้องการสมัคร (อันดับ 3)', 'แผนการเรียนอันดับ 3'],
+                p4: ['อันดับ 4', 'แผนการเรียนที่ต้องการสมัคร (อันดับ 4)', 'แผนการเรียนอันดับ 4'],
+                p5: ['อันดับ 5', 'แผนการเรียนที่ต้องการสมัคร (อันดับ 5)', 'แผนการเรียนอันดับ 5']
+            };
+
+            // ฟังก์ชันช่วยหาค่าจากคีย์ที่เป็นไปได้หลายชื่อ
+            const getValue = (std, keys) => {
+                for (const key of keys) {
+                    if (std[key] !== undefined) return std[key];
+                }
+                return '';
+            };
 
             const dataRows = room.students.map((std, i) => [
                 i + 1, 
-                std['เลขที่นั่งสอบ'] || '', 
-                std['เลขประจำตัวประชาชน'] || '', 
-                std['คำนำหน้าชื่อ'] || '', 
-                std['ชื่อ'] || '', 
-                std['นามสกุล'] || '', 
-                "", // หมายเหตุ
-                std[p1] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 1)'] || '',
-                std[p2] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 2)'] || '',
-                std[p3] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 3)'] || '',
-                std[p4] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 4)'] || '',
-                std[p5] || std['แผนการเรียนที่ต้องการสมัคร (อันดับ 5)'] || ''
+                getValue(std, colMapping.seatNo),
+                getValue(std, colMapping.regDate),
+                getValue(std, colMapping.idCard),
+                getValue(std, colMapping.prefix),
+                getValue(std, colMapping.firstName),
+                getValue(std, colMapping.lastName),
+                getValue(std, colMapping.province),
+                getValue(std, colMapping.district),
+                getValue(std, colMapping.oldSchool),
+                getValue(std, colMapping.phone),
+                getValue(std, colMapping.p1),
+                getValue(std, colMapping.p2),
+                getValue(std, colMapping.p3),
+                getValue(std, colMapping.p4),
+                getValue(std, colMapping.p5),
+                "" // หมายเหตุ
             ]);
 
             const header = [
                 "ลำดับที่", 
                 "เลขที่นั่งสอบ", 
+                "วันที่ลงทะเบียน",
                 "เลขประจำตัวประชาชน", 
                 "คำนำหน้าชื่อ", 
                 "ชื่อ", 
                 "นามสกุล", 
-                "หมายเหตุ",
+                "จังหวัด",
+                "อำเภอ",
+                "สถานศึกษาเดิม",
+                "เบอร์โทรศัพท์",
                 "อันดับ 1",
                 "อันดับ 2",
                 "อันดับ 3",
                 "อันดับ 4",
-                "อันดับ 5"
+                "อันดับ 5",
+                "หมายเหตุ"
             ];
 
             const ws = XLSX.utils.aoa_to_sheet([
                 ["บัญชีรายชื่อผู้มีสิทธิ์สอบ"], 
-                [`แผนการเรียน: ${room.planName}`], 
+                [`แผนการเรียน (อันดับ 1): ${room.planName}`], 
                 [`เลขห้องสอบ: ${index + 1}`], 
                 [""], 
                 header, 
                 ...dataRows
             ]);
 
-            // ปรับความกว้างคอลัมน์
+            // ปรับความกว้างคอลัมน์ให้เหมาะสมกับข้อมูลชุดใหญ่
             ws['!cols'] = [
-                { wch: 8 }, { wch: 15 }, { wch: 20 }, { wch: 12 }, { wch: 20 }, 
-                { wch: 20 }, { wch: 15 }, { wch: 25 }, { wch: 25 }, { wch: 25 }, 
-                { wch: 25 }, { wch: 25 }
+                { wch: 8 },  // ลำดับ
+                { wch: 15 }, // เลขที่นั่ง
+                { wch: 20 }, // วันที่
+                { wch: 20 }, // ID Card
+                { wch: 12 }, // คำนำหน้า
+                { wch: 18 }, // ชื่อ
+                { wch: 18 }, // นามสกุล
+                { wch: 15 }, // จังหวัด
+                { wch: 15 }, // อำเภอ
+                { wch: 25 }, // โรงเรียน
+                { wch: 15 }, // โทร
+                { wch: 25 }, // อันดับ 1
+                { wch: 25 }, // อันดับ 2
+                { wch: 25 }, // อันดับ 3
+                { wch: 25 }, // อันดับ 4
+                { wch: 25 }, // อันดับ 5
+                { wch: 20 }  // หมายเหตุ
             ];
 
             const wb = XLSX.utils.book_new(); 
